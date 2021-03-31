@@ -1,7 +1,11 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
-
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore'
+import 'firebase/analytics'
+import 'firebase/storage'
 import { IonicVue } from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
@@ -23,10 +27,35 @@ import '@ionic/vue/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-const app = createApp(App)
-  .use(IonicVue)
-  .use(router);
-  
-router.isReady().then(() => {
-  app.mount('#app');
-});
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCaWGmzX7KD26vs-RcXt8RAXE6-M0smG9w",
+  authDomain: "artbehavioralanalysis1.firebaseapp.com",
+  projectId: "artbehavioralanalysis1",
+  storageBucket: "artbehavioralanalysis1.appspot.com",
+  messagingSenderId: "869314210015",
+  appId: "1:869314210015:web:752824f8ebe0d94be3216a",
+  measurementId: "G-YZ45SGKR77"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();
+
+export const auth = firebase.auth();
+export const db = firebase.firestore();
+export const storage = firebase.storage();
+
+let app: any;
+
+auth.onAuthStateChanged(async user => {
+  if(!app){
+    app = createApp(App)
+      .use(IonicVue)
+      .use(router);
+
+  router.isReady().then(() => {
+    app.mount('#app');
+  });
+  }
+})
